@@ -84,11 +84,11 @@ def main():
         if min_length < 1:
             min_length = 1
 
-    min_count = 0
+    min_count = 1
     if len(sys.argv) > 3:
         min_count = int(float(sys.argv[3]))
-        if min_count < 0:
-            min_count = 0
+        if min_count < 1:
+            min_count = 1
 
     start = 0
     if len(sys.argv) > 4:
