@@ -1,36 +1,47 @@
 #!/usr/bin/env python
-## *******************************************************************
-##   (C) Copyright 2015 Leiden Institute of Advanced Computer Science
-##   Universiteit Leiden
-##   All Rights Reserved
-## *******************************************************************
-## ssr-extractor (extract short sequence repeats)
-## *******************************************************************
-## FILE INFORMATION:
-##   File:     ssr-extractor.py
-##   Author:   Jonathan K. Vis
-##   Revision: 1.0.1
-##   Date:     2015/02/06
-## *******************************************************************
-## DESCRIPTION:
-##  Automatic short sequence repeat extraction based on run length
-##  encoding with variable run lengths.
-## *******************************************************************
+"""
+*******************************************************************
+ ssr-extractor (extract short sequence repeats)
+*******************************************************************
+  Automatic short sequence repeat extraction based on run length
+  encoding with variable run lengths.
+*******************************************************************
+"""
 
+
+from __future__ import unicode_literals
 import sys
+
 
 THRESHOLD = 10000
 
+
 class Repeat(object):
+    """
+    Simple repeat structure.
+    """
     __slots__ = ['start', 'end', 'count']
 
-    def __init__(self, start, end, count = 0):
+    def __init__(self, start, end, count=0):
+        """
+        Initialize the repeat structure.
+
+        :arg integer start: Start position of the repeat.
+        :arg integer end: End position of the repeat.
+        :arg integer count: Number of repeats.
+        """
         self.start = start
         self.end = end
         self.count = count
 
 
-def short_sequence_repeat_extractor(string, min_length = 1):
+def short_sequence_repeat_extractor(string, min_length=1):
+    """
+    Extract the short tandem repeat structure from a string.
+
+    :arg string string: The string.
+    :arg integer min_length: Minimum length of the repeat structure.
+    """
     length = len(string)
 
     k_max = length // 2 + 1
@@ -70,13 +81,16 @@ def short_sequence_repeat_extractor(string, min_length = 1):
 
 
 def main():
+    """
+    Entry point for the console.
+    """
     if len(sys.argv) < 2:
-        print "usage: " + sys.argv[0] + " string [min_length] [min_count] [start] [end]"
+        print ("usage: " + sys.argv[0] + " file "
+               "[min_length] [min_count] [start] [end]")
         exit()
 
-    f = open(sys.argv[1], "r")
-    string = f.read()
-    f.close()
+    with open(sys.argv[1], "r") as infile:
+        string = infile.read()
 
     min_length = 1
     if len(sys.argv) > 2:
@@ -104,12 +118,12 @@ def main():
 
     repeats = short_sequence_repeat_extractor(string[start:end], min_length)
 
-    for r in repeats:
-        if r.count >= min_count:
-            print "%s%d" % (string[r.start:r.end], r.count + 1),
+    for repeat in repeats:
+        if repeat.count >= min_count:
+            print "%s%d" % (string[repeat.start:repeat.end], repeat.count + 1),
         else:
-            for i in range(r.count + 1):
-                print string[r.start:r.end],
+            for _ in range(repeat.count + 1):
+                print string[repeat.start:repeat.end],
 
 
 if __name__ == "__main__":
