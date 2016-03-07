@@ -8,7 +8,7 @@ Usage
 
 `python ssr-extractor file [min_count] [min_length] [start] [end]`
 
-- `string`; The file containing the string.
+- `file`; The file containing the string.
 - `min_length`; Optional. Minimum length of the repeat (default 1).
 - `min_count`; Optional. Minimum number of repeats (default 1).
 - `start`; Optional. A start position in the string.
