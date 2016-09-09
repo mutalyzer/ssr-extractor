@@ -86,45 +86,47 @@ def main():
     """
     if len(sys.argv) < 2:
         print ("usage: " + sys.argv[0] + " file "
-               "[min_length] [min_count] [start] [end]")
+               "[unit_count] [min_length] [min_count] [start] [end]")
         exit()
 
     with open(sys.argv[1], "r") as infile:
         string = infile.read()
 
-    min_length = 1
+    unit_count = 1
     if len(sys.argv) > 2:
-        min_length = int(float(sys.argv[2]))
-        if min_length < 1:
-            min_length = 1
+        unit_count = max(1, int(float(sys.argv[2])))
+
+    min_length = 1
+    if len(sys.argv) > 3:
+        min_length = max(1, int(float(sys.argv[3])))
 
     min_count = 1
-    if len(sys.argv) > 3:
-        min_count = int(float(sys.argv[3]))
-        if min_count < 1:
-            min_count = 1
+    if len(sys.argv) > 4:
+        min_count = max(1, int(float(sys.argv[4])))
 
     start = 0
-    if len(sys.argv) > 4:
-        start = int(float(sys.argv[4]))
-        if start < 0:
-            start = 0
+    if len(sys.argv) > 5:
+        start = max(0, int(float(sys.argv[5])))
 
     end = len(string)
-    if len(sys.argv) > 5:
-        end = int(float(sys.argv[5]))
-        if end < start:
-            end = start
+    if len(sys.argv) > 6:
+        end = max(start, int(float(sys.argv[6])))
 
     repeats = short_sequence_repeat_extractor(string[start:end], min_length)
 
-    for repeat in repeats:
-        if repeat.count >= min_count:
-            print "%s%d" % (string[repeat.start:repeat.end], repeat.count + 1),
-        else:
-            for _ in range(repeat.count + 1):
-                print string[repeat.start:repeat.end],
+#    for repeat in repeats:
+#        if repeat.count >= min_count:
+#            print "%s%d" % (string[repeat.start:repeat.end], repeat.count + 1),
+#        else:
+#            for _ in range(repeat.count + 1):
+#                print string[repeat.start:repeat.end],
 
+    units = {}
+    for repeat in repeats:
+        if repeat.count + 1 >= unit_count:
+            units[string[repeat.start:repeat.end]] = repeat.count + 1
+
+    print units
 
 if __name__ == "__main__":
     main()
